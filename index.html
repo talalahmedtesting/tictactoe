@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #1b0033, #3f0071);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    .active {
+      display: flex;
+    }
+    h1, h2 {
+      margin: 10px;
+    }
+    button, select {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin-top: 20px;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 48px;
+      color: cyan;
+    }
+    .cell.taken {
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Start Screen -->
+  <div id="startScreen" class="screen active">
+    <h1>Tic Tac Toe</h1>
+    <button onclick="showDifficulty()">Start Game</button>
+  </div>
+
+  <!-- Difficulty Screen -->
+  <div id="difficultyScreen" class="screen">
+    <h2>Select Difficulty</h2>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+      <option value="super">Super Hard</option>
+    </select>
+    <button onclick="startGame()">Play</button>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="gameScreen" class="screen">
+    <h2>PLAYER vs <span id="aiName">MASTER</span></h2>
+    <div id="board"></div>
+    <h3 id="result"></h3>
+  </div>
+
+  <script>
+    const playerName = "PLAYER";
+    const aiNames = ["Master", "King", "Champion", "BotX"];
+    let currentPlayer = 'O';
+    let difficulty = 'easy';
+    let board = Array(9).fill('');
+    const winCombos = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+
+    function showDifficulty() {
+      document.getElementById('startScreen').classList.remove('active');
+      document.getElementById('difficultyScreen').classList.add('active');
+    }
+
+    function startGame() {
+      difficulty = document.getElementById('difficulty').value;
+      document.getElementById('difficultyScreen').classList.remove('active');
+      document.getElementById('gameScreen').classList.add('active');
+      document.getElementById('aiName').textContent = aiNames[Math.floor(Math.random() * aiNames.length)];
+      drawBoard();
+    }
+
+    function drawBoard() {
+      const boardDiv = document.getElementById('board');
+      boardDiv.innerHTML = '';
+      board = Array(9).fill('');
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.addEventListener('click', () => handleMove(i));
+        boardDiv.appendChild(cell);
+      }
+    }
+
+    function handleMove(index) {
+      if (board[index] !== '') return;
+      board[index] = currentPlayer;
+      updateBoard();
+      if (checkWin(currentPlayer)) {
+        document.getElementById('result').textContent = `You Wins!`;
+        endGame();
+      } else if (board.every(cell => cell !== '')) {
+        document.getElementById('result').textContent = `Draw!`;
+      } else {
+        currentPlayer = 'X';
+        setTimeout(aiMove, 500);
+      }
+    }
+
+    function aiMove() {
+      let available = board.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);
+      let move = available[Math.floor(Math.random() * available.length)];
+      board[move] = 'X';
+      updateBoard();
+      if (checkWin('X')) {
+        document.getElementById('result').textContent = `${document.getElementById('aiName').textContent} Wins!`;
+        endGame();
+      } else if (board.every(cell => cell !== '')) {
+        document.getElementById('result').textContent = `Draw!`;
+      } else {
+        currentPlayer = 'O';
+      }
+    }
+
+    function updateBoard() {
+      const cells = document.querySelectorAll('.cell');
+      cells.forEach((cell, idx) => {
+        cell.textContent = board[idx];
+        if (board[idx]) cell.classList.add('taken');
+      });
+    }
+
+    function checkWin(player) {
+      return winCombos.some(combo => combo.every(i => board[i] === player));
+    }
+
+    function endGame() {
+      document.querySelectorAll('.cell').forEach(cell => cell.classList.add('taken'));
+    }
+  </script>
+</body>
+</html>
