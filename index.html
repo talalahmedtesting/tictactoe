@@ -71,14 +71,14 @@
   </div>
   
 
-    // Rewarded interstitial
-        
+  <!-- Monetag Rewarded Interstitial Ad Code -->
+  <script>      
 show_9315638().then(() => {
     // You need to add your user reward function here, which will be executed after the user watches the ad.
     // For more details, please refer to the detailed instructions.
     alert('You have seen an ad!');
 })
-
+  </script>
                      
 
   <!-- Difficulty Screen -->
@@ -94,8 +94,8 @@ show_9315638().then(() => {
   </div>
   
 
-    // Rewarded Popup
-
+  <!-- Monetag Rewarded Popup Ad Code -->
+<script>
 show_9315638('pop').then(() => {
     // user watch ad till the end or close it in interstitial format
     // your code to reward user for rewarded format
@@ -103,7 +103,7 @@ show_9315638('pop').then(() => {
     // user get error during playing ad
     // do nothing or whatever you want
 })
-
+  </script>
                      
 
   <!-- Game Screen -->
@@ -114,8 +114,8 @@ show_9315638('pop').then(() => {
   </div>
 
 
-    // In-App Interstitial 
-
+  <!-- Monetag In-App Interstitial Ad Code -->
+<script>
 show_9315638({ 
   type: 'inApp', 
   inAppSettings: { 
@@ -137,7 +137,7 @@ This value is decoded as follows:
   If you set the last digit as 1, then at any transition between pages,
   the session will be reset, and the ads will start again.
 */
-
+  </script>
              
   <script>
     const playerName = "PLAYER";
